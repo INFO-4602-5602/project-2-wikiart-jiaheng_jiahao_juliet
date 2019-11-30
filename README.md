@@ -8,7 +8,7 @@
 <h2>Team Member Roles: </h2>
 <li>Jiaheng Zhao: First Visualization and preprocessing.</li>
 <li>Jiahao Wang:  Second Visualization and Interactive.</li>
-<li>JJuliet Anne McFarlane: Analyze data and visual charts.</li>
+<li>Juliet Anne McFarlane: Analyze data and visual charts.</li>
 
 <h2>Design Process:</h2> 
 As we read through the requirements carefully, we began to explore and brainstorm with the data. Based off of the data, we decided to use two interactive visualizations to present the data to the observer in the most logical manner. First, we intend to design a complex area chart, which includes the art movement of each period and the number of works. This will give viewers a broad picture of the eras. In the second chart, we are going to design a chart in which large circles consists of several small circles. The large circles represent the stylistic period for the pieces. Each small circle will represent the artistic movement. The sizes of the circles within will reflect the number of such art forms. 
