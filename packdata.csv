@@ -1,0 +1,45 @@
+﻿Category,Style,count,Max Value of Mean rating
+Minimalism,Contemporary Art,189,1.5
+"Art Informel,Minimalism","Contemporary Art,Modern Art",1,0.2
+"Abstract Expressionism,Minimalism","Contemporary Art,Modern Art",3,-0.25
+"Color Field Painting,Minimalism","Contemporary Art,Modern Art",3,-0.09
+"Abstract Art,Abstract Expressionism",Modern Art,1,0.63
+"Abstract Art,Color Field Painting",Modern Art,1,0
+"Abstract Art,Post-Impressionism",Modern Art,1,0.6
+"Abstract Expressionism,Surrealism",Modern Art,1,0.27
+"Cubism,Post-Impressionism",Modern Art,1,0.5
+"Expressionism,Post-Impressionism",Modern Art,1,1.45
+"Impressionism,Post-Impressionism",Modern Art,1,1.7
+"Magic Realism,Neo-Expressionism",Modern Art,1,0.9
+"Magic Realism,Surrealism",Modern Art,1,1.4
+"Neo-Expressionism,Pop Art",Modern Art,1,1.18
+"Abstract Expressionism,Color Field Painting",Modern Art,2,0.25
+"Abstract Expressionism,Lyrical Abstraction",Modern Art,2,0.8
+"Art Informel,Magic Realism",Modern Art,2,0.55
+"Abstract Art,Surrealism",Modern Art,3,1
+"Color Field Painting,Lyrical Abstraction",Modern Art,5,1.46
+"Abstract Art,Cubism",Modern Art,7,1.1
+"Cubism,Expressionism",Modern Art,8,1.7
+Magic Realism,Modern Art,118,2.67
+Impressionism,Modern Art,167,2.64
+Cubism,Modern Art,177,2
+Abstract Art,Modern Art,178,1.7
+Lyrical Abstraction,Modern Art,179,2
+Color Field Painting,Modern Art,180,1.7
+Expressionism,Modern Art,181,2.3
+Abstract Expressionism,Modern Art,184,1.9
+Post-Impressionism,Modern Art,186,2.6
+Surrealism,Modern Art,186,2.3
+Art Informel,Modern Art,195,1.8
+Neo-Expressionism,Modern Art,195,2.2
+Pop Art,Modern Art,197,2.18
+"Magic Realism,Neoclassicism","Modern Art,Post Renaissance Art",1,1.3
+"Neoclassicism,Romanticism",Post Renaissance Art,7,2.25
+Neoclassicism,Post Renaissance Art,141,2.73
+Baroque,Post Renaissance Art,151,2.55
+Rococo,Post Renaissance Art,163,2.6
+Realism,Post Renaissance Art,168,2.8
+Romanticism,Post Renaissance Art,170,2.58
+High Renaissance,Renaissance Art,70,2.7
+Early Renaissance,Renaissance Art,73,2.3
+Northern Renaissance,Renaissance Art,144,2.5

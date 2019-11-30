@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<style type="text/css">
+svg {
+  font: 10px sans-serif;
+  float: left;
+}
+.axis line,
+.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  cursor: move;
+  font-size: 12;
+}
+.xaxis text {
+  font: 8px sans-serif;
+}
+.yaxis text {
+  font: 8px sans-serif;
+}
+.xaxis path,
+.xaxis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.yaxis path,
+.yaxis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.legend {
+  padding: 10px;
+  width: 20px;
+  margin-bottom: 20px;
+}
+a{
+  /*text-decoration:none;*/
+  color: black;
+}
+</style>
+</head>
+<body>
+<div id="lineSVG" style="height: 400px; width: 920px;"></div>
+<div style="height: 500px; width: 920px;">
+  <div id="packSVG" style="height: 400px; width: 400px; float: left; margin-top: 30px;"></div>
+  <div id="info" style="height: 400px; width: 490px; float: right; margin-top: 30px;">
+    <div id="legend" style="height: 220px; width: 300px;"></div>
+    <div style="font-size: 20px; line-height: 48px; padding-left: 20px;">The artist with the highest average score</div>
+    <div style="line-height: 28px; word-wrap:break-word; padding-left: 20px;">
+      <div id="artist">Please click the dot</div>
+      Artist Info URL: <a href="" target="_blank" id="url"></a>
+    </div>
+      
+  </div>
+</div>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<script>
+var styles = ["Renaissance Art", "Post Renaissance Art", "Modern Art,Post Renaissance Art", "Modern Art", "Contemporary Art,Modern Art", "Contemporary Art"];
+
+var height = 350, width = 870, margin = {top: 20, right: 20, bottom: 30, left: 30};
+
+
+var svg = d3.select("#lineSVG")
+.append("svg")
+.attr("height", height + margin.top + margin.bottom)
+.attr("width", width + margin.left + margin.right);
+
+
+var yScale = d3.scale.linear()
+.domain([0, 65])
+.range([height + margin.top, margin.top]);
+
+
+var xScale = d3.scale.linear()
+.domain([1400, 2050])
+.range([margin.left, width + margin.left]);
+
+var colors = ["#EDC949", "#59A14F", "#76B7B2", "#E15759", "#F28E2C", "#4E79A7"];
+
+// line
+var line = d3.svg.line()
+.x(function(d) {
+    return xScale(d[0]);
+})
+.y(function(d) {
+    return yScale(d[1]);
+});
+
+// x
+var xAxis = d3.svg.axis()
+.scale(xScale)
+.orient("bottom");
+
+svg.append("g")
+.attr("class","axis")
+.attr("transform","translate(0," + (height + margin.top) + ")")
+.call(xAxis);
+
+// y
+var yAxis = d3.svg.axis()
+.scale(yScale)
+.orient("left");
+
+svg.append("g")
+.attr("class","axis")
+.attr("transform","translate(" + margin.left + ",0)")
+.call(yAxis);
+
+
+var svg2 = d3.select("#packSVG")
+.append("svg")
+.attr("height", 400)
+.attr("width", 800);
+
+
+var pack = d3.layout.pack()
+.size([400, 400]) //布局中心
+.sort(function compare(a, b) { return b.value - a.value; }); //降序排序
+
+
+var svg3 = d3.select("#legend")
+.append("svg")
+.attr("height", 200)
+.attr("width", 350);
+
+
+svg3.selectAll("rect")
+.data(colors)
+.enter().append("rect")
+.attr("x", 20)
+.attr("y", function(d, i) { return 20+30*i; })
+.attr("width", 50)
+.attr("height", 13)
+.attr("fill", function(d, i) { return colors[i]; });
+
+svg3.selectAll("text")
+.data(styles)
+.enter().append("text")
+.attr("x", 80)
+.attr("y", function(d, i) { return 30+30*i; })
+.style("font-size", 14)
+.text(function(d) { return d; })
+
+// loading data
+d3.csv("linedata.csv", function(error, data) {
+    //console.log(data);
+
+    // process data
+    var dataset = Array(6);
+    for (var i = 0; i < 6; i++) {
+        dataset[i] = [];
+    }
+    var current = "";
+
+    for (var i = 0; i < data.length; i++) {
+      if (i == data.length - 1) {
+        for (var j = 0; j < styles.length; j++) {
+          if (data[i].Style == styles[j]) {
+            dataset[j].push([parseInt(data[i].Year), parseInt(data[i].count)]);
+            dataset[j].push([parseInt(data[i].Year)+1, 0]);
+          }
+        }
+      }
+      else {
+        if (data[i].Style != current) {
+          current = data[i].Style;
+          for (var j = 0; j < styles.length; j++) {
+            if (data[i].Style == styles[j]) {
+              dataset[j].push([parseInt(data[i].Year)-1, 0]);
+              if (i > 0) {
+                dataset[j-1].push([parseInt(data[i-1].Year)+1, 0]);
+              }
+            }
+          }
+        }
+
+        for (var j = 0; j < styles.length; j++) {
+          if (data[i].Style == styles[j]) {
+              dataset[j].push([parseInt(data[i].Year),parseInt(data[i].count)]);
+          }
+        }
+      }          
+    }
+    //console.log(dataset, "line");
+
+    
+    svg.selectAll('.line')
+    .data(dataset)
+    .enter()
+    .append("path")
+    .attr("class", "line")
+    .attr('stroke', function(d,i){
+        return colors[i];
+    })
+    .attr("fill", function(d,i){
+        return colors[i];
+    })
+    .attr("d", line)
+    .attr("transform", function(d,i) {
+        return "translate(0," + (-10*i) + ")"
+    })
+    .style("opacity", 0.8);
+
+    
+    d3.csv("packdata.csv", function(error, data) {
+      //console.log(data);
+
+      // Load the raw data in order to find the artist with the largest Mean Rating in each category
+      d3.csv("WikiArtClean.csv", function(error, docs) {
+        //console.log(docs);
+        
+        // process packdata
+        var root = {};
+        root.children = [];
+        for (var i = 0; i < styles.length; i++) {
+          root.children.push({
+            style: styles[i],
+            children: []
+          })
+        }
+
+        for (var i = 0; i < data.length; i++) {
+          for (var j = 0; j < styles.length; j++) {
+            if (data[i].Style == styles[j]) {
+              root.children[j].children.push({
+                category: data[i].Category,
+                value: parseInt(data[i].count)
+              })
+            }
+          }          
+        }
+        //console.log(root, "pack");
+
+        // draw chart
+        svg2.selectAll(".circle")
+        .data(pack.nodes(root))
+        .enter().append("circle")
+        .attr("class", "circle")
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        .attr("r", function(d) { return d.r; })
+        .attr("fill", function(d,i) { 
+          if (d.depth == 2) { 
+            if (d.parent.style == "Renaissance Art") { return "#EDC949"; }
+            else if (d.parent.style == "Post Renaissance Art") { return "#59A14F"; }
+            else if (d.parent.style == "Modern Art,Post Renaissance Art") { return "#76B7B2"; }
+            else if (d.parent.style == "Modern Art") { return "#E15759"; }
+            else if (d.parent.style == "Contemporary Art,Modern Art") { return "#F28E2C"; }
+            else if (d.parent.style == "Contemporary Art") { return "#4E79A7"; }
+            else return "black"
+          }
+          else return "none";
+        }) 
+        .attr("stroke", function(d,i) {
+          if (d.depth == 2)  return "none";
+          else return "#666";
+        })
+        .attr("stroke-dasharray", function(d,i) {
+          if (d.depth < 2)  return "6,3";
+        })
+        .style("stroke-width", 0.5)
+        .style("opacity", function(d,i) { return 0.6 + 0.4*d.r/28; })
+        // 鼠标经过交互
+        .on("mouseover", function(d) {
+          if (d.depth == 2) {
+            var style = d.parent.style;
+            svg.selectAll(".line")
+            .each(function(d, i) {
+              if (styles[i] == style) {
+                d3.select(this).style("opacity", 1);
+              }
+              else {
+                d3.select(this).style("opacity", 0.6);
+              }
+            })
+          }
+        })
+        // Mouse-out interaction
+        .on("mouseout", function() {
+          svg.selectAll(".line")
+          .each(function(d) {
+            d3.select(this).style("opacity", 0.8);
+          })
+        })
+        //Mouse click switch
+        .on("click", function(d) {
+          if (d.depth == 2) {
+            // Filter to get all data under this category
+            var filter = docs.filter(function(datum) {
+              return datum.Category == d.category;
+            });
+
+            // find the max value of mean rating
+            var max = filter.sort(function(a, b) {
+              return a['Mean rating'] < b['Mean rating']
+            })[0];
+
+            // Change artist information in detail view
+            console.log(max.Artist, max['Artist Info URL']);
+            document.getElementById('artist').innerHTML = "Artist: " + max.Artist;
+            document.getElementById('url').innerHTML = max['Artist Info URL'];
+            // Add hyperlinks to text
+            document.getElementById('url').setAttribute("href", max['Artist Info URL']);
+          }
+        });
+
+        // Interaction of graphs
+        svg.selectAll(".line")
+        .on("mouseover", function(d, i) {
+          svg2.selectAll(".circle")
+          .each(function(d) {
+            if (d.depth == 2 && d.parent.style != styles[i]) {
+              d3.select(this).style("opacity", 0.6);
+            }
+          })
+        })
+        .on("mouseout", function() {
+          svg2.selectAll(".circle")
+          .each(function(d) {
+            d3.select(this).style("opacity", function(d,i) { return 0.6 + 0.4*d.r/28; });
+          })
+        })
+
+        document.getElementById("info").style.display = "block";
+      })      
+    })
+})
+
+document.getElementById("info").style.display = "none";
+</script>
+</body>
+</html>
